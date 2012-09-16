@@ -12,6 +12,7 @@ var express = require('express')
   , path = require('path');
 
 var app = express();
+var MongoStore = require('connect-mongo')(express);
 
 app.configure(function(){
   app.set('port', process.env.PORT || 3000);
@@ -19,14 +20,12 @@ app.configure(function(){
   app.set("view engine", "hbs");
   app.use(express.favicon());
   app.use(express.logger('dev'));
+  app.use(express.cookieParser());
   app.use(express.bodyParser({
     hash: 'md5',
-    uploadDir: path.join(__dirname, 'public')
+    // uploadDir: path.join(__dirname, 'public')
   }));
   // pass a secret to cookieParser() for signed cookies
-  app.use(express.cookieParser('mk2 is cool'));
-  // add req.session cookie support
-  app.use(express.cookieSession());
   app.use(express.methodOverride());
   app.use(express.static(path.join(__dirname, 'public')));
 });
@@ -34,6 +33,13 @@ app.configure(function(){
 app.configure('development', function(){
   app.use(express.errorHandler());
 });
+
+app.use(express.session({
+  secret: 'mk2 is cool',
+  store: new MongoStore({
+    url: require('./common/db').URL
+  })
+}));
 
 app.use(function (req, res, next) {
   res.locals.currentUser = req.session.user;
@@ -62,7 +68,7 @@ app.use(function (err, req, res, next) {
   console.error(err.stack);
 
   // error page
-  res.status(500).render('error', {message: err.message});
+  res.status(500).render('error', {message: err.stack});
 });
 
 http.createServer(app).listen(app.get('port'), function(){

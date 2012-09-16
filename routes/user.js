@@ -48,6 +48,9 @@ exports.logout = function (req, res, next) {
 
 // GET /profile
 exports.profile = function (req, res, next) {
+  if (!req.session.user) {
+    return res.redirect('/');
+  }
   User.get(req.session.user._id, function (err, user) {
     if (err) {
       return next(err);

@@ -50,3 +50,5 @@ db.user.ensureIndex('email', {unique: true}, function () {
 
 db.bind('email');
 db.email.ensureIndex('hash', {unique: true});
+
+db.URL = mongourl;
