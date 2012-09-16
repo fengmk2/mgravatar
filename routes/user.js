@@ -39,6 +39,7 @@ exports.signin = function (req, res, next) {
 };
 
 exports.profile = function (req, res, next) {
+  //console.log(locals);
   User.get(req.session.user._id, function (err, user) {
     if (err) {
       return next(err);
