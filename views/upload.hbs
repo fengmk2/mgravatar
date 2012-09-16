@@ -1,10 +1,7 @@
-<form>
-  <legend>Legend</legend>
-  <label>Label name</label>
-  <input type="text" placeholder="Type something…">
-  <span class="help-block">Example block-level help text here.</span>
-  <label class="checkbox">
-    <input type="checkbox"> Check me out
-  </label>
+<form action="/profile/upload?" method="POST" enctype="multipart/form-data">
+  <legend>{{{currentUser.email}}}'s Avatar</legend>
+  <input type="hidden" name="email" value="{{{user.email}}}" />
+  <label>Upload an image</label>
+  <input type="file" name="image" multiple="multiple" />
   <button type="submit" class="btn">Submit</button>
 </form>

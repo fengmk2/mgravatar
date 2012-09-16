@@ -51,7 +51,7 @@ exports.add = function (email, password, callback) {
       createTime: new Date(),
       updateTime: new Date()
     };
-    db.user.insert(user, function (err) {
+    db.user.insert(profile, function (err) {
       if (err) {
         return callback(err);
       }

@@ -17,9 +17,9 @@ exports.signup = function (req, res, next) {
       return next(err);
     }
     if (!result.success) {
-      return res.render('404', {message: result.message});
+      return res.render('error', {message: result.message});
     }
-    exports.login(req, res, next);
+    exports.signin(req, res, next);
   });
 };
 
@@ -38,7 +38,17 @@ exports.signin = function (req, res, next) {
   });
 };
 
+exports.profile = function (req, res, next) {
+  User.get(req.session.user._id, function (err, user) {
+    if (err) {
+      return next(err);
+    }
+    res.render('upload');
+  });
+};
+
 exports.upload = function (req, res, next) {
   var file = req.files && req.files.image;
-  
+  var email = req.body.email;
+
 };
