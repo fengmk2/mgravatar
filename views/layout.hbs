@@ -6,6 +6,9 @@
     <link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap.css" />
     <link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap-responsive.css" />
     <link rel="stylesheet" type="text/css" href="/stylesheets/style.css" />
+    <script type="text/javascript" aync src="/javascripts/jquery.js"></script>
+    <script type="text/javascript" aync src="/javascripts/bootstrap.js"></script>
+    <script type="text/javascript" aync src="/javascripts/application.js"></script>
   </head>
   <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -23,6 +26,12 @@
               <li><a href="#about">About</a></li>
               <li><a href="#contact">Contact</a></li>
             </ul>
+            {{#if currentUser}}
+              <p class="navbar-text pull-right">
+                goddyzhao
+                <a href="/logout">Logout</a>
+              </p>
+            {{else}}
             <form id="user-form" class="hide navbar-form pull-right" action="/signin" method="POST">
               <input class="span2" name="email" type="text" placeholder="Email">
               <input class="span2" name="password" type="password" placeholder="Password">
@@ -32,6 +41,7 @@
               <button class="btn" id="signup-btn">Sign up</button>
               <button class="btn btn-primary" id="signin-btn">Sign in</button>
             </p>
+            {{/if}}
           </div><!--/.nav-collapse -->
         </div>
       </div>
@@ -43,8 +53,5 @@
         <p>© MGravatar 2012</p>
       </footer>
     </div>
-    <script type="text/javascript" aync src="/javascripts/jquery.js"></script>
-    <script type="text/javascript" aync src="/javascripts/bootstrap.js"></script>
-    <script type="text/javascript" aync src="/javascripts/application.js"></script>
   </body>
 </html>

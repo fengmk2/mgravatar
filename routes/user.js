@@ -46,35 +46,66 @@ exports.logout = function (req, res, next) {
   res.redirect('/');
 };
 
+// GET /profile
 exports.profile = function (req, res, next) {
-  var ep = EventProxy.create('user', 'emails', function (user, emails) {
-    res.render('upload', {user: user, emails: emails});
-  });
-  ep.once('error', function (err) {
-    ep.unbind();
-    next(err);
-  });
   User.get(req.session.user._id, function (err, user) {
     if (err) {
-      return ep.emit('error', err);
+      return next(err);
     }
-    ep.emit('user', user);
+    res.render('upload', {user: user});
   });
-  User.getEmails(req.session.user._id, function (err, emails) {
+};
+
+// GET /profile/upload
+exports.listImages = function (req, res, next) {
+  var email = User.md5(req.query.email || req.session.user.email);
+  User.getEmail(email, function (err, email) {
     if (err) {
-      return ep.emit('error', err);
+      return next(err);
     }
-    ep.emit('emails', emails);
+    var images = [];
+    email.images.forEach(function (info) {
+      images.push({
+        name: info.name,
+        size: info.size,
+        thumbnail_url: '/avatars/' + info.path,
+        url: '/avatars/' + info.path,
+      });
+    });
+    res.send(images);
+    // res.send([
+    //    { "delete_type" : "DELETE",
+    //     "delete_url" : "http://localhost:8888/files/image2012-08-02-143349-2.jpg",
+    //     "name" : "image2012-08-02-143349-2.jpg",
+    //     "size" : 298289,
+    //     "thumbnail_url" : "http://localhost:8888/files/thumbnail/image2012-08-02-143349-2.jpg",
+    //     "url" : "http://localhost:8888/files/image2012-08-02-143349-2.jpg"
+    //   },
+    //   { "delete_type" : "DELETE",
+    //     "delete_url" : "http://localhost:8888/files/js-error.png",
+    //     "name" : "js-error.png",
+    //     "size" : 186361,
+    //     "thumbnail_url" : "http://localhost:8888/files/thumbnail/js-error.png",
+    //     "url" : "http://localhost:8888/files/js-error.png"
+    //   },
+    //   { "delete_type" : "DELETE",
+    //     "delete_url" : "http://localhost:8888/files/Screensho%20assa%20(1).png",
+    //     "name" : "Screensho assa (1).png",
+    //     "size" : 16617,
+    //     "thumbnail_url" : "http://localhost:8888/files/thumbnail/Screensho%20assa%20(1).png",
+    //     "url" : "http://localhost:8888/files/Screensho%20assa%20(1).png"
+    //   }
+    // ]);
   });
 };
 
 exports.upload = function (req, res, next) {
-  var file = req.files && req.files.image;
-  var email = req.body.email;
+  var file = req.files.files[0];
+  var email = req.body.email || req.session.user.email;
   var savedir = path.join(path.dirname(__dirname), 'public', 'avatars');
   var filename = file.hash + path.extname(file.filename);
   fs.rename(file.path, path.join(savedir, filename));
-  var imageInfo = {
+  var info = {
     path: filename,
     name: file.filename,
     size: file.size,
@@ -82,10 +113,15 @@ exports.upload = function (req, res, next) {
     mime: file.mime,
     hash: file.hash
   };
-  User.addImage(req.session.user._id, email, imageInfo, function (err, result) {
+  User.addImage(req.session.user._id, email, info, function (err, result) {
     if (err) {
       return next(err);
     }
-    res.redirect('/profile');
+    res.send([{
+      name: info.name,
+      size: info.size,
+      thumbnail_url: '/avatars/' + info.path,
+      url: '/avatars/' + info.path,
+    }]);
   });
 };

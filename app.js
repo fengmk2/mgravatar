@@ -46,6 +46,7 @@ app.get('/', routes.index);
 app.get('/developer/api', developer.api);
 app.get('/users', user.list);
 app.get('/profile', user.profile);
+app.get('/profile/upload', user.listImages);
 app.post('/profile/upload', user.upload);
 app.post('/signin', user.signin);
 app.post('/signup', user.signup);
