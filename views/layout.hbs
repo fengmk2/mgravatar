@@ -28,7 +28,8 @@
             </ul>
             {{#if currentUser}}
               <p class="navbar-text pull-right">
-                goddyzhao
+                <a href="/profile">{{{currentUser.email}}}</a>
+                |
                 <a href="/logout">Logout</a>
               </p>
             {{else}}

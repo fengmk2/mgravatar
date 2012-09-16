@@ -34,7 +34,7 @@ exports.signin = function (req, res, next) {
       return next(err);
     }
     if (!user) {
-      return next();
+      return next(new Error('Email or password wrong.'));
     }
     req.session.user = user;
     res.redirect('/profile');
@@ -52,7 +52,8 @@ exports.profile = function (req, res, next) {
     if (err) {
       return next(err);
     }
-    res.render('upload', {user: user});
+    var hash = User.md5(req.query.email || req.session.user.email);
+    res.render('upload', {user: user, hash: hash});
   });
 };
 
@@ -63,8 +64,9 @@ exports.listImages = function (req, res, next) {
     if (err) {
       return next(err);
     }
+    var infos = email.images || [];
     var images = [];
-    email.images.forEach(function (info) {
+    infos.forEach(function (info) {
       images.push({
         name: info.name,
         size: info.size,

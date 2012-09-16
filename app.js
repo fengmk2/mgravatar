@@ -61,12 +61,7 @@ app.use(function (err, req, res, next) {
   console.error(err.stack);
 
   // error page
-  res.status(500).render('error');
-});
-
-// assume 404 since no middleware responded
-app.use(function (req, res, next) {
-  res.status(404).render('404', { url: req.originalUrl });
+  res.status(500).render('error', {message: err.message});
 });
 
 http.createServer(app).listen(app.get('port'), function(){
