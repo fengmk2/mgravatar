@@ -23,6 +23,10 @@ app.configure(function(){
   app.use(express.methodOverride());
   app.use(app.router);
   app.use(express.static(path.join(__dirname, 'public')));
+  // pass a secret to cookieParser() for signed cookies
+  app.use(express.cookieParser('mk2 is cool'));
+  // add req.session cookie support
+  app.use(express.cookieSession());
 });
 
 app.configure('development', function(){
@@ -33,6 +37,9 @@ app.get('/', routes.index);
 app.get('/developer/api', developer.api);
 app.get('/avatar/upload', avatar.upload);
 app.get('/users', user.list);
+app.post('/profile/upload', user.upload);
+app.post('/signin', user.signin);
+app.post('/signup', user.signup);
 app.get('/error', routes.error);
 
 http.createServer(app).listen(app.get('port'), function(){
