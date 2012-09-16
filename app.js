@@ -7,6 +7,7 @@ var express = require('express')
   , routes = require('./routes')
   , user = require('./routes/user')
   , developer = require('./routes/developer')
+  , avatar = require('./routes/avatar')
   , http = require('http')
   , path = require('path');
 
@@ -30,6 +31,7 @@ app.configure('development', function(){
 
 app.get('/', routes.index);
 app.get('/developer/api', developer.api)
+app.get('/avatar/upload', avatar.upload)
 app.get('/users', user.list);
 
 http.createServer(app).listen(app.get('port'), function(){
