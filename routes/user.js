@@ -64,6 +64,9 @@ exports.listImages = function (req, res, next) {
     if (err) {
       return next(err);
     }
+    if (!email) {
+      return res.send([]);
+    }
     var infos = email.images || [];
     var images = [];
     infos.forEach(function (info) {
