@@ -20,7 +20,6 @@ $(function () {
 
     // Enable iframe cross-domain access via redirect option:
     $('#fileupload').fileupload('option', {
-        url: '//jquery-file-upload.appspot.com/',
         maxFileSize: 5000000,
         acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
         'redirect': window.location.href.replace(
