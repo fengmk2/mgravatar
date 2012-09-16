@@ -85,12 +85,32 @@ exports.update = function (id, data, callback) {
 exports.addImage = function (id, email, imageInfo, callback) {
   var hash = exports.md5(email);
   db.email.findOne({hash: hash}, function (err, item) {
-    item = item || {email: email, userid: id, images: []};
-    item.images.push(imageInfo);
+    if (err) {
+      return callback(err);
+    }
+    item = item || {email: email, userid: id, images: [imageInfo], hash: hash};
     if (item._id) {
+      var images = item.images.filter(function (info) {
+        return info.hash !== imageInfo.hash;
+      });
+      images.push(imageInfo);
+      item.images = images;
       db.email.updateById(item._id, item, callback);
     } else {
       db.email.insert(item, callback);
     }
   });
+};
+
+exports.visitEmail = function (hash, nextIndex, callback) {
+  callback = callback || function () {};
+  db.email.update({hash: hash}, {$set: {index: nextIndex}}, callback);
+};
+
+exports.getEmail = function (hash, callback) {
+  db.email.findOne({hash: hash}, callback);
+};
+
+exports.getEmails = function (id, callback) {
+  db.email.findItems({userid: id}, callback);
 };

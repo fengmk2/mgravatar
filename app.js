@@ -18,12 +18,14 @@ app.configure(function(){
   app.set('views', __dirname + '/views');
   app.set("view engine", "hbs");
   app.use(express.favicon());
+  app.use(express.logger('dev'));
+  app.use(express.bodyParser({
+    hash: 'md5'
+  }));
   // pass a secret to cookieParser() for signed cookies
   app.use(express.cookieParser('mk2 is cool'));
   // add req.session cookie support
   app.use(express.cookieSession());
-  app.use(express.logger('dev'));
-  app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(express.static(path.join(__dirname, 'public')));
 });
@@ -39,14 +41,15 @@ app.use(function (req, res, next) {
 
 app.use(app.router);
 
+app.get('/avatar/:hash', avatar.index);
 app.get('/', routes.index);
 app.get('/developer/api', developer.api);
-app.get('/avatar/upload', avatar.upload);
 app.get('/users', user.list);
 app.get('/profile', user.profile);
 app.post('/profile/upload', user.upload);
 app.post('/signin', user.signin);
 app.post('/signup', user.signup);
+app.get('/logout', user.logout);
 app.get('/error', routes.error);
 
 app.use(function (err, req, res, next) {
