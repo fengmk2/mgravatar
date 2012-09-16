@@ -23,12 +23,15 @@
               <li><a href="#about">About</a></li>
               <li><a href="#contact">Contact</a></li>
             </ul>
-            <form class="navbar-form pull-right" action="/login" method="POST">
-              <input class="span2" type="text" placeholder="Email">
-              <input class="span2" type="password" placeholder="Password">
-              <button type="submit" class="btn">Sign up</button>
-              <button type="submit" class="btn btn-primary">Sign in</button>
+            <form id="user-form" class="hide navbar-form pull-right" action="/signin" method="POST">
+              <input class="span2" name="email" type="text" placeholder="Email">
+              <input class="span2" name="password" type="password" placeholder="Password">
+              <button type="submit" class="btn" id="submit-btn">Sign up</button>
             </form>
+            <p class="pull-right">
+              <button class="btn" id="signup-btn">Sign up</button>
+              <button class="btn btn-primary" id="signin-btn">Sign in</button>
+            </p>
           </div><!--/.nav-collapse -->
         </div>
       </div>
@@ -42,5 +45,6 @@
     </div>
     <script type="text/javascript" aync src="/javascripts/jquery.js"></script>
     <script type="text/javascript" aync src="/javascripts/bootstrap.js"></script>
+    <script type="text/javascript" aync src="/javascripts/application.js"></script>
   </body>
 </html>
