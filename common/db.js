@@ -47,3 +47,6 @@ db.bind('user');
 db.user.ensureIndex('email', {unique: true}, function () {
   console.log('email index created.', arguments);
 });
+
+db.bind('email');
+db.email.ensureIndex('hash', {unique: true});

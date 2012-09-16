@@ -30,10 +30,14 @@ function createToken(username, password) {
   return exports.md5(password + username + password + username[0]);
 }
 
-exports.addUser = function (username, password, callback) {
-  var token = createToken(username, password);
+exports.get = function (id, callback) {
+  db.user.findById(id, callback);
+};
+
+exports.add = function (email, password, callback) {
+  var token = createToken(email, password);
   db.user.findOne({
-    email: username
+    email: email
   }, function (err, user) {
     if (err) {
       return callback(err);
@@ -41,11 +45,13 @@ exports.addUser = function (username, password, callback) {
     if (user) {
       return callback(null, {success: false, message: 'User exists.'});
     }
-    db.user.insert({
-      email: username,
+    var profile = {
+      email: email,
       password: token,
-      createTime: Date.now()
-    }, function (err) {
+      createTime: new Date(),
+      updateTime: new Date()
+    };
+    db.user.insert(user, function (err) {
       if (err) {
         return callback(err);
       }
@@ -54,10 +60,37 @@ exports.addUser = function (username, password, callback) {
   });
 };
 
-exports.authUser = function (username, password, callback) {
+exports.auth = function (username, password, callback) {
   var token = createToken(username, password);
   db.user.findOne({
     email: username,
     password: token
   }, callback);
+};
+
+exports.update = function (id, data, callback) {
+  db.user.updateById(id, data, callback);
+};
+
+/**
+ * Add an image to email.
+ * 
+ * @param {string} id
+ * @param {String} email
+ * @param {Object} imageInfo
+ *  - url
+ *  - type
+ * @param {Function(err)} callback
+ */
+exports.addImage = function (id, email, imageInfo, callback) {
+  var hash = exports.md5(email);
+  db.email.findOne({hash: hash}, function (err, item) {
+    item = item || {email: email, userid: id, images: []};
+    item.images.push(imageInfo);
+    if (item._id) {
+      db.email.updateById(item._id, item, callback);
+    } else {
+      db.email.insert(item, callback);
+    }
+  });
 };

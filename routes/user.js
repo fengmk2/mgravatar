@@ -10,23 +10,23 @@ exports.list = function(req, res){
 };
 
 exports.signup = function (req, res, next) {
-  var username = req.body.username;
+  var email = req.body.email;
   var password = req.body.password;
-  User.addUser(username, password, function (err, result) {
+  User.add(email, password, function (err, result) {
     if (err) {
       return next(err);
     }
     if (!result.success) {
       return res.render('404', {message: result.message});
     }
-    res.redirect('/login');
+    exports.login(req, res, next);
   });
 };
 
-exports.login = function (req, res, next) {
-  var username = req.body.username;
+exports.signin = function (req, res, next) {
+  var email = req.body.email;
   var password = req.body.password;
-  User.authUser(username, password, function (err, user) {
+  User.auth(email, password, function (err, user) {
     if (err) {
       return next(err);
     }
@@ -36,4 +36,9 @@ exports.login = function (req, res, next) {
     req.session.user = user;
     res.redirect('/profile');
   });
+};
+
+exports.upload = function (req, res, next) {
+  var file = req.files && req.files.image;
+  
 };
