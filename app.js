@@ -21,6 +21,10 @@ app.configure(function(){
   app.use(express.methodOverride());
   app.use(app.router);
   app.use(express.static(path.join(__dirname, 'public')));
+  // pass a secret to cookieParser() for signed cookies
+  app.use(express.cookieParser('mk2 is cool'));
+  // add req.session cookie support
+  app.use(express.cookieSession());
 });
 
 app.configure('development', function(){
@@ -29,6 +33,7 @@ app.configure('development', function(){
 
 app.get('/', routes.index);
 app.get('/users', user.list);
+app.post('/login', user.login);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
