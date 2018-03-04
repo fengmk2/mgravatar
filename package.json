@@ -8,7 +8,7 @@
   "main": "app.js",
   "dependencies": {
     "express": "3.0.0rc4",
-    "mongoskin": "0.4.2",
+    "mongoskin": "1.4.10",
     "eventproxy": "0.1.2",
     "connect-mongo": "",
     "hbs": ">=1.x"
