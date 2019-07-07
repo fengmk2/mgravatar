@@ -3,7 +3,9 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node app"
+    "start": "node app",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "main": "app.js",
   "dependencies": {
@@ -11,6 +13,8 @@
     "mongoskin": "0.4.2",
     "eventproxy": "0.1.2",
     "connect-mongo": "",
-    "hbs": ">=1.x"
-  }
+    "hbs": ">=1.x",
+    "snyk": "^1.192.3"
+  },
+  "snyk": true
 }
